@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Krithika KR</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="chat-wrapper">
+
+    <div class="chat-header">
+      <div class="avatar">KR</div>
+      <div class="header-info">
+        <h2>Krithika KR</h2>
+        <p>● Online</p>
+      </div>
+    </div>
+
+    <div class="chat-body">
+      {% if reply %}
+        <div class="message-row user">
+          <div class="msg-avatar user">Y</div>
+          <div class="bubble user">{{ request.form.get('message', '') }}</div>
+        </div>
+        <div class="message-row">
+          <div class="msg-avatar ai">KR</div>
+          <div class="bubble ai">{{ reply }}</div>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="icon">💬</div>
+          <p>Say something to Krithika KR</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="chat-footer">
+      <form method="POST">
+        <div class="input-row">
+          <input type="text" name="message" placeholder="Type a message..." required autofocus/>
+          <button type="submit">➤</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</body>
+</html>
