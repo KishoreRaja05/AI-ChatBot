@@ -6,10 +6,11 @@ A multi-persona AI chatbot built with Flask, Groq API, and Llama 3. Chat with 4 
 👉 [ai-chatbot-sjuy.onrender.com](https://ai-chatbot-sjuy.onrender.com)
 
 ## Personas
-- **Aria** — Friendly & Warm
-- **Nova** — Sharp & Direct
-- **Kai** — Calm & Analytical
-- **Rex** — Bold & Energetic
+## Personas
+- **Varahi** — Friendly & Warm
+- **Vega** — Sharp & Direct
+- **Aruvi** — Calm & Flowing
+- **Agni** — Bold & Fierce
 
 ## Tech Stack
 - Python + Flask (backend)

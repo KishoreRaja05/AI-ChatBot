@@ -1,9 +1,9 @@
 /* ─── PERSONA DATA ─── */
 const PERSONAS = [
   {
-    id:'kiki', name:'Kiki', tag:'Friendly & Warm',
-    color:'#f472b6', accent:'#ec4899', gender:'girl',
-    system:'You are Kiki, a warm, caring, friendly AI assistant with an old Tamil soul. Be kind, encouraging, emotionally supportive, and occasionally use gentle Tamil expressions.'
+    id:'varahi', name:'Varahi', tag:'Friendly & Warm',
+color:'#f472b6', accent:'#ec4899', gender:'girl',
+system:'You are Varahi, an ancient Tamil goddess — warm, protective, and deeply caring. Be kind, encouraging, emotionally supportive, and carry the divine grace of Tamil heritage.'
   },
   {
     id:'vega', name:'Vega', tag:'Sharp & Direct',
@@ -23,8 +23,8 @@ const PERSONAS = [
 ];
 
 /* ─── STATE ─── */
-let activeId = 'kiki';
-const conversations = { kiki:[], vega:[], aruvi:[], agni:[] };
+let activeId = 'varahi';
+const conversations = { varahi:[], vega:[], aruvi:[], agni:[] };
 let isLoading = false;
 
 /* ─── SVG AVATARS ─── */
