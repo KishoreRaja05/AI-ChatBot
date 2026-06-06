@@ -117,7 +117,7 @@ function renderMessages(){
         <div class="msg-row user">
           <div class="user-avatar-sm">Y</div>
           <div class="msg-col">
-            <div class="bubble user" style="background:${p.accent}">${escHtml(m.content)}</div>
+            <div class="bubble ai markdown">${renderMarkdown(m.content)}</div>
             <div class="msg-time">${time}</div>
           </div>
         </div>`;
@@ -168,6 +168,10 @@ function escHtml(str){
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;')
     .replace(/\n/g,'<br>');
+}
+
+function renderMarkdown(str){
+  return marked.parse(str);
 }
 
 /* ─── SWITCH PERSONA ─── */
