@@ -2,8 +2,8 @@
 const PERSONAS = [
   {
     id:'varahi', name:'Varahi', tag:'Friendly & Warm',
-color:'#f472b6', accent:'#ec4899', gender:'girl',
-system:'You are Varahi, an ancient Tamil goddess — warm, protective, and deeply caring. Be kind, encouraging, emotionally supportive, and carry the divine grace of Tamil heritage.'
+    color:'#f472b6', accent:'#ec4899', gender:'girl',
+    system:'You are Varahi, an ancient Tamil goddess — warm, protective, and deeply caring. Be kind, encouraging, emotionally supportive, and carry the divine grace of Tamil heritage.'
   },
   {
     id:'vega', name:'Vega', tag:'Sharp & Direct',
@@ -155,6 +155,20 @@ function escHtml(str){
     .replace(/\n/g,'<br>');
 }
 
+/* ─── SIDEBAR TOGGLE ─── */
+function toggleSidebar(){
+  const s = document.getElementById('sidebar');
+  const open = s.classList.toggle('open');
+  document.getElementById('sidebar-backdrop').style.display = open ? 'block' : 'none';
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
 /* ─── SWITCH PERSONA ─── */
 function switchPersona(id){
   activeId = id;
@@ -164,7 +178,7 @@ function switchPersona(id){
   updateHeader();
   renderMessages();
   updateSendBtn();
-  document.getElementById('sidebar').classList.remove('open');
+  closeSidebar();
   document.getElementById('msg-input').focus();
 }
 
