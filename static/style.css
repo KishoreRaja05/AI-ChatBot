@@ -291,6 +291,7 @@ body{
 .markdown h1,.markdown h2,.markdown h3{
   font-weight:700;margin:10px 0 6px;color:#0f172a;
 }
+.markdown{white-space:normal}
 .markdown h1{font-size:18px}
 .markdown h2{font-size:16px}
 .markdown h3{font-size:14px}

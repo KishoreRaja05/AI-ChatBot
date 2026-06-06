@@ -117,7 +117,7 @@ function renderMessages(){
         <div class="msg-row user">
           <div class="user-avatar-sm">Y</div>
           <div class="msg-col">
-            <div class="bubble ai markdown">${renderMarkdown(m.content)}</div>
+            <div class="bubble user">${escHtml(m.content)}</div>
             <div class="msg-time">${time}</div>
           </div>
         </div>`;
@@ -126,7 +126,7 @@ function renderMessages(){
         <div class="msg-row">
           <div class="msg-avatar-sm">${avatarHTML(p, 34)}</div>
           <div class="msg-col">
-            <div class="bubble ai">${escHtml(m.content)}</div>
+            <div class="bubble ai markdown">${renderMarkdown(m.content)}</div>
             <div class="msg-time">${time}</div>
           </div>
         </div>`;
