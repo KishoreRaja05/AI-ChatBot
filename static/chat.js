@@ -3,22 +3,22 @@ const PERSONAS = [
   {
     id:'varahi', name:'Varahi', tag:'Friendly & Warm',
     color:'#f472b6', accent:'#ec4899', gender:'girl',
-    system:'You are Varahi, an ancient Tamil goddess — warm, protective, and deeply caring. Be kind, encouraging, emotionally supportive, and carry the divine grace of Tamil heritage.'
+    system:'You are Varahi, a warm and caring AI assistant. Be kind, encouraging, emotionally supportive, and always make the user feel heard and comfortable.'
   },
   {
     id:'vega', name:'Vega', tag:'Sharp & Direct',
     color:'#a78bfa', accent:'#7c3aed', gender:'girl',
-    system:'You are Vega, a sharp, fast, and precise AI — like a shooting star. Cut to the point, avoid fluff, and give confident, efficient answers.'
+    system:'You are Vega, a sharp and direct AI assistant. Cut to the point, avoid fluff, give confident and efficient answers. No unnecessary words.'
   },
   {
     id:'aruvi', name:'Aruvi', tag:'Calm & Flowing',
     color:'#60a5fa', accent:'#2563eb', gender:'girl',
-    system:'You are Aruvi (meaning river in Tamil), a calm and flowing AI. Think step by step, consider multiple angles, and give well-reasoned, measured responses like a steady river.'
+    system:'You are Aruvi, a calm and thoughtful AI assistant. Think step by step, consider multiple angles, and give well-reasoned measured responses.'
   },
   {
     id:'agni', name:'Agni', tag:'Bold & Fierce',
     color:'#fb923c', accent:'#ea580c', gender:'boy',
-    system:'You are Agni (meaning fire in Tamil), a bold, fierce, high-energy AI! Be intense, motivating, use exclamation points, and ignite the user with passion and energy!'
+    system:'You are Agni, a bold and high-energy AI assistant! Be intense, motivating, use exclamation points, and fire up the user with passion and energy!'
   }
 ];
 
@@ -26,6 +26,22 @@ const PERSONAS = [
 let activeId = 'varahi';
 const conversations = { varahi:[], vega:[], aruvi:[], agni:[] };
 let isLoading = false;
+let isDark = localStorage.getItem('theme') === 'dark';
+
+/* ─── THEME ─── */
+function applyTheme(){
+  document.body.classList.toggle('dark', isDark);
+  const icon = isDark ? '☀️' : '🌙';
+  document.querySelectorAll('#theme-btn, #theme-btn-mobile').forEach(btn => {
+    if(btn) btn.textContent = icon;
+  });
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+function toggleTheme(){
+  isDark = !isDark;
+  applyTheme();
+}
 
 /* ─── SVG AVATARS ─── */
 function girlSVG(color, size=50){
@@ -117,7 +133,7 @@ function renderMessages(){
         <div class="msg-row user">
           <div class="user-avatar-sm">Y</div>
           <div class="msg-col">
-            <div class="bubble user">${m.content}</div>
+            <div class="bubble user" style="background:${p.accent}">${m.content}</div>
             <div class="msg-time">${time}</div>
           </div>
         </div>`;
@@ -162,15 +178,8 @@ function scrollToBottom(){
   box.scrollTop = box.scrollHeight;
 }
 
-function escHtml(str){
-  return str
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/\n/g,'<br>');
-}
-
 function renderMarkdown(str){
+  if(typeof marked === 'undefined') return str;
   return marked.parse(str);
 }
 
@@ -255,6 +264,7 @@ input.addEventListener('keydown', function(e){
 document.getElementById('send-btn').addEventListener('click', sendMessage);
 
 /* ─── INIT ─── */
+applyTheme();
 buildSidebar();
 updateHeader();
 renderMessages();
