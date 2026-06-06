@@ -53,6 +53,21 @@ function avatarHTML(persona, size=50){
   return persona.gender === 'girl' ? girlSVG(persona.color, size) : boySVG(persona.color, size);
 }
 
+/* ─── SIDEBAR TOGGLE ─── */
+function toggleSidebar(){
+  const s = document.getElementById('sidebar');
+  const b = document.getElementById('sidebar-backdrop');
+  const open = s.classList.toggle('open');
+  b.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 /* ─── BUILD SIDEBAR ─── */
 function buildSidebar(){
   const list = document.getElementById('persona-list');
@@ -155,20 +170,6 @@ function escHtml(str){
     .replace(/\n/g,'<br>');
 }
 
-/* ─── SIDEBAR TOGGLE ─── */
-function toggleSidebar(){
-  const s = document.getElementById('sidebar');
-  const open = s.classList.toggle('open');
-  document.getElementById('sidebar-backdrop').style.display = open ? 'block' : 'none';
-  document.body.style.overflow = open ? 'hidden' : '';
-}
-
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-backdrop').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
 /* ─── SWITCH PERSONA ─── */
 function switchPersona(id){
   activeId = id;
@@ -208,7 +209,6 @@ async function sendMessage(){
 
   try {
     const history = conversations[activeId].map(m => ({role:m.role, content:m.content}));
-
     const res = await fetch('/chat', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -216,9 +216,7 @@ async function sendMessage(){
     });
     const data = await res.json();
     const reply = data.reply || 'Something went wrong. Please try again!';
-
     conversations[activeId].push({ role:'assistant', content:reply, ts:Date.now() });
-
   } catch(e) {
     conversations[activeId].push({
       role:'assistant',
@@ -257,4 +255,11 @@ buildSidebar();
 updateHeader();
 renderMessages();
 updateSendBtn();
-input.focus();
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.remove(), 500);
+  }, 2800);
+});

@@ -9,34 +9,73 @@
 </head>
 <body>
 
+<!-- LOADING SCREEN -->
+<div id="loader">
+  <div class="loader-content">
+    <div class="loader-avatars">
+      <div class="l-avatar" style="background:#f472b620">
+        <svg width="32" height="32" viewBox="0 0 50 50" fill="none">
+          <circle cx="25" cy="19" r="8" fill="#f472b6"/>
+          <path d="M12 45c0-7.18 5.82-13 13-13s13 5.82 13 13" fill="#f472b6" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="l-avatar" style="background:#a78bfa20">
+        <svg width="32" height="32" viewBox="0 0 50 50" fill="none">
+          <circle cx="25" cy="19" r="8" fill="#a78bfa"/>
+          <path d="M12 45c0-7.18 5.82-13 13-13s13 5.82 13 13" fill="#a78bfa" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="l-avatar" style="background:#60a5fa20">
+        <svg width="32" height="32" viewBox="0 0 50 50" fill="none">
+          <circle cx="25" cy="19" r="8" fill="#60a5fa"/>
+          <path d="M12 45c0-7.18 5.82-13 13-13s13 5.82 13 13" fill="#60a5fa" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="l-avatar" style="background:#fb923c20">
+        <svg width="32" height="32" viewBox="0 0 50 50" fill="none">
+          <circle cx="25" cy="19" r="8" fill="#fb923c"/>
+          <path d="M12 45c0-7.18 5.82-13 13-13s13 5.82 13 13" fill="#fb923c" opacity=".7"/>
+        </svg>
+      </div>
+    </div>
+    <div class="loader-title">AI Chat</div>
+    <div class="loader-sub">Waking up your assistants...</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<!-- BACKDROP -->
+<div id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
 <!-- SIDEBAR -->
 <div id="sidebar">
   <div class="sidebar-header">
     <h1>Conversations</h1>
   </div>
-  <div class="persona-list" id="persona-list">
-    <!-- Injected by chat.js -->
-  </div>
+  <div class="persona-list" id="persona-list"></div>
   <div class="sidebar-footer">All powered by Llama 3 · Groq</div>
 </div>
-
-<!-- BACKDROP (mobile overlay) -->
-<div id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
 <!-- CHAT AREA -->
 <div id="chat-area">
 
   <!-- Header -->
   <div id="chat-header">
-    <button id="mobile-menu" onclick="toggleSidebar()" aria-label="Menu">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round">
-        <line x1="3" y1="6" x2="21" y2="6"/>
-        <line x1="3" y1="12" x2="21" y2="12"/>
-        <line x1="3" y1="18" x2="21" y2="18"/>
+    <button id="logo-btn" onclick="toggleSidebar()" aria-label="Open conversations">
+      <svg id="logo-svg" width="26" height="26" viewBox="0 0 50 50" fill="none">
+        <circle cx="25" cy="25" r="25" fill="url(#lg)"/>
+        <circle cx="25" cy="19" r="8" fill="#fff"/>
+        <path d="M12 45c0-7.18 5.82-13 13-13s13 5.82 13 13" fill="#fff" opacity=".85"/>
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#f472b6"/>
+            <stop offset="100%" stop-color="#a78bfa"/>
+          </linearGradient>
+        </defs>
       </svg>
     </button>
     <div class="h-avatar" id="header-avatar"></div>
-    <div>
+    <div class="h-info">
       <div class="h-name" id="header-name"></div>
       <div class="h-status">● Online</div>
     </div>
