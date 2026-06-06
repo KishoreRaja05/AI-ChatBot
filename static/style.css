@@ -164,8 +164,9 @@ body{
 .msg-row.user .msg-col{align-items:flex-end}
 .bubble{
   padding:11px 15px;font-size:14px;
-  line-height:1.55;white-space:pre-wrap;word-break:break-word;
+  line-height:1.55;white-space:normal;word-break:break-word;
 }
+
 .bubble.ai{
   background:#fff;color:#1a1a2e;
   border-radius:18px 18px 18px 4px;

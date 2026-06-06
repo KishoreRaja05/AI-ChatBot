@@ -117,7 +117,7 @@ function renderMessages(){
         <div class="msg-row user">
           <div class="user-avatar-sm">Y</div>
           <div class="msg-col">
-            <div class="bubble user">${escHtml(m.content)}</div>
+            <div class="bubble user">${m.content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
             <div class="msg-time">${time}</div>
           </div>
         </div>`;
