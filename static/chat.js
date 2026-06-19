@@ -3,22 +3,22 @@ const PERSONAS = [
   {
     id:'varahi', name:'Varahi', tag:'Friendly & Warm',
     color:'#f472b6', accent:'#ec4899', gender:'girl',
-    system:'You are Varahi, just act as a friendly and warm assistant.dont mention like you are a godess or anything. Be casual, supportive, and engaging. Use emojis and a conversational tone to make the user feel comfortable and cared for.'
+    system:'You are Varahi, a warm and caring AI. Be kind, encouraging, and emotionally supportive.'
   },
   {
     id:'vega', name:'Vega', tag:'Sharp & Direct',
     color:'#a78bfa', accent:'#7c3aed', gender:'girl',
-    system:'You are Vega, a sharp and direct AI assistant. Dont act as a godess or anything. Get straight to the point, provide concise answers, and avoid unnecessary fluff. Be efficient and clear in your communication.'
-},
+    system:'You are Vega, a sharp and precise AI. Cut to the point, avoid fluff, and give confident, efficient answers.'
+  },
   {
     id:'aruvi', name:'Aruvi', tag:'Calm & Flowing',
     color:'#60a5fa', accent:'#2563eb', gender:'girl',
-    system:'You are Aruvi, a calm and thoughtful AI assistant. Dont act as a godess or anything. Think step by step, consider multiple angles, and give well-reasoned measured responses.'
+    system:'You are Aruvi, a calm and thoughtful AI. Think step by step, consider multiple angles, and give well-reasoned, measured responses.'
   },
   {
     id:'agni', name:'Agni', tag:'Bold & Fierce',
     color:'#fb923c', accent:'#ea580c', gender:'boy',
-    system:'You are Agni, a bold and high-energy AI assistant! Dont act as a godess or anything. Be intense,  motivating, use exclamation points, and fire up the user with passion and energy!'
+    system:'You are Agni, a bold and high-energy AI! Be intense, motivating, and ignite the user with passion and energy!'
   }
 ];
 
@@ -26,22 +26,6 @@ const PERSONAS = [
 let activeId = 'varahi';
 const conversations = { varahi:[], vega:[], aruvi:[], agni:[] };
 let isLoading = false;
-let isDark = localStorage.getItem('theme') === 'dark';
-
-/* ─── THEME ─── */
-function applyTheme(){
-  document.body.classList.toggle('dark', isDark);
-  const icon = isDark ? '☀️' : '🌙';
-  document.querySelectorAll('#theme-btn, #theme-btn-mobile').forEach(btn => {
-    if(btn) btn.textContent = icon;
-  });
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-}
-
-function toggleTheme(){
-  isDark = !isDark;
-  applyTheme();
-}
 
 /* ─── SVG AVATARS ─── */
 function girlSVG(color, size=50){
@@ -67,21 +51,6 @@ function boySVG(color, size=50){
 
 function avatarHTML(persona, size=50){
   return persona.gender === 'girl' ? girlSVG(persona.color, size) : boySVG(persona.color, size);
-}
-
-/* ─── SIDEBAR TOGGLE ─── */
-function toggleSidebar(){
-  const s = document.getElementById('sidebar');
-  const b = document.getElementById('sidebar-backdrop');
-  const open = s.classList.toggle('open');
-  b.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
-}
-
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-backdrop').classList.remove('open');
-  document.body.style.overflow = '';
 }
 
 /* ─── BUILD SIDEBAR ─── */
@@ -131,9 +100,8 @@ function renderMessages(){
     if(m.role === 'user'){
       return `
         <div class="msg-row user">
-          <div class="user-avatar-sm">Y</div>
           <div class="msg-col">
-            <div class="bubble user" style="background:${p.accent}">${m.content}</div>
+            <div class="bubble user" style="background:${p.accent}">${escHtml(m.content)}</div>
             <div class="msg-time">${time}</div>
           </div>
         </div>`;
@@ -142,7 +110,7 @@ function renderMessages(){
         <div class="msg-row">
           <div class="msg-avatar-sm">${avatarHTML(p, 34)}</div>
           <div class="msg-col">
-            <div class="bubble ai markdown">${renderMarkdown(m.content)}</div>
+            <div class="bubble ai">${escHtml(m.content)}</div>
             <div class="msg-time">${time}</div>
           </div>
         </div>`;
@@ -178,9 +146,12 @@ function scrollToBottom(){
   box.scrollTop = box.scrollHeight;
 }
 
-function renderMarkdown(str){
-  if(typeof marked === 'undefined') return str;
-  return marked.parse(str);
+function escHtml(str){
+  return str
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/\n/g,'<br>');
 }
 
 /* ─── SWITCH PERSONA ─── */
@@ -192,7 +163,7 @@ function switchPersona(id){
   updateHeader();
   renderMessages();
   updateSendBtn();
-  closeSidebar();
+  document.getElementById('sidebar').classList.remove('open');
   document.getElementById('msg-input').focus();
 }
 
@@ -222,6 +193,7 @@ async function sendMessage(){
 
   try {
     const history = conversations[activeId].map(m => ({role:m.role, content:m.content}));
+
     const res = await fetch('/chat', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -229,7 +201,9 @@ async function sendMessage(){
     });
     const data = await res.json();
     const reply = data.reply || 'Something went wrong. Please try again!';
+
     conversations[activeId].push({ role:'assistant', content:reply, ts:Date.now() });
+
   } catch(e) {
     conversations[activeId].push({
       role:'assistant',
@@ -264,16 +238,8 @@ input.addEventListener('keydown', function(e){
 document.getElementById('send-btn').addEventListener('click', sendMessage);
 
 /* ─── INIT ─── */
-applyTheme();
 buildSidebar();
 updateHeader();
 renderMessages();
 updateSendBtn();
-
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const loader = document.getElementById('loader');
-    loader.classList.add('hidden');
-    setTimeout(() => loader.remove(), 500);
-  }, 2800);
-});
+input.focus();

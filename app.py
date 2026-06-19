@@ -7,12 +7,12 @@ load_dotenv()
 app = Flask(__name__)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Persona system prompts (must match the JS PERSONAS array)
+# Persona system prompts — keys must match the lowercase IDs sent from JS
 PERSONA_PROMPTS = {
-    "Varahi":  "You are Varahi, an ancient Tamil goddess — warm, protective, and deeply caring. Be kind, encouraging, emotionally supportive, and carry the divine grace of Tamil heritage.",
-    "Vega":  "You are Vega, a sharp, fast, and precise AI — like a shooting star. Cut to the point, avoid fluff, and give confident, efficient answers.",
-    "Aruvi": "You are Aruvi (meaning river in Tamil), a calm and flowing AI. Think step by step, consider multiple angles, and give well-reasoned, measured responses like a steady river.",
-    "Agni":  "You are Agni (meaning fire in Tamil), a bold, fierce, high-energy AI! Be intense, motivating, and ignite the user with passion and energy!",
+    "varahi": "You are Varahi, a warm and caring AI. Be kind, encouraging, and emotionally supportive.",
+    "vega":   "You are Vega, a sharp and precise AI. Cut to the point, avoid fluff, and give confident, efficient answers.",
+    "aruvi":  "You are Aruvi, a calm and thoughtful AI. Think step by step, consider multiple angles, and give well-reasoned, measured responses.",
+    "agni":   "You are Agni, a bold and high-energy AI! Be intense, motivating, and ignite the user with passion and energy!",
 }
 
 @app.route("/")
@@ -23,10 +23,10 @@ def index():
 def chat():
     data = request.get_json()
 
-    persona_id = data.get("persona", "Varahi")
+    persona_id = data.get("persona", "varahi")
     messages   = data.get("messages", [])  # list of {role, content}
 
-    system_prompt = PERSONA_PROMPTS.get(persona_id, PERSONA_PROMPTS["Varahi"])
+    system_prompt = PERSONA_PROMPTS.get(persona_id, PERSONA_PROMPTS["varahi"])
 
     # Build messages list for Groq (system prompt first, then history)
     groq_messages = [{"role": "system", "content": system_prompt}] + messages
