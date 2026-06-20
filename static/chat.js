@@ -244,6 +244,24 @@ renderMessages();
 updateSendBtn();
 input.focus();
 
+/* ─── DARK MODE ─── */
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+  const mobileBtn = document.getElementById('theme-btn-mobile');
+  if(mobileBtn) mobileBtn.textContent = isDark ? '☀️' : '🌙';
+}
+
+// Apply saved theme on load
+if(localStorage.getItem('theme') === 'dark'){
+  document.body.classList.add('dark');
+  document.getElementById('theme-btn').textContent = '☀️';
+  const mobileBtn = document.getElementById('theme-btn-mobile');
+  if(mobileBtn) mobileBtn.textContent = '☀️';
+}
+
 /* ─── SPLASH SCREEN DISMISS ─── */
 function dismissLoader() {
   const loader = document.getElementById('loader');
