@@ -243,3 +243,29 @@ updateHeader();
 renderMessages();
 updateSendBtn();
 input.focus();
+
+/* ─── SPLASH SCREEN DISMISS ─── */
+async function dismissLoader() {
+  try {
+    await fetch('/');
+  } catch(e) {}
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.style.opacity = '0';
+    loader.style.transition = 'opacity 0.4s ease';
+    setTimeout(() => loader.style.display = 'none', 400);
+  }
+}
+
+// Dismiss after server responds OR after 30s max timeout
+Promise.race([
+  dismissLoader(),
+  new Promise(resolve => setTimeout(resolve, 30000))
+]).then(() => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.style.opacity = '0';
+    loader.style.transition = 'opacity 0.4s ease';
+    setTimeout(() => loader.style.display = 'none', 400);
+  }
+});
