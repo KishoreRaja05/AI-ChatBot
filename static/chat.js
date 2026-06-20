@@ -245,27 +245,14 @@ updateSendBtn();
 input.focus();
 
 /* ─── SPLASH SCREEN DISMISS ─── */
-async function dismissLoader() {
-  try {
-    await fetch('/');
-  } catch(e) {}
+function dismissLoader() {
   const loader = document.getElementById('loader');
   if (loader) {
     loader.style.opacity = '0';
-    loader.style.transition = 'opacity 0.4s ease';
-    setTimeout(() => loader.style.display = 'none', 400);
+    loader.style.transition = 'opacity 0.5s ease';
+    setTimeout(() => loader.remove(), 500);
   }
 }
 
-// Dismiss after server responds OR after 30s max timeout
-Promise.race([
-  dismissLoader(),
-  new Promise(resolve => setTimeout(resolve, 30000))
-]).then(() => {
-  const loader = document.getElementById('loader');
-  if (loader) {
-    loader.style.opacity = '0';
-    loader.style.transition = 'opacity 0.4s ease';
-    setTimeout(() => loader.style.display = 'none', 400);
-  }
-});
+// Hide splash after short delay (server already awake since page loaded)
+setTimeout(dismissLoader, 1500);
