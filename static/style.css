@@ -331,3 +331,84 @@ body{
   #messages{padding:16px}
   #theme-btn-mobile{display:flex}
 }
+
+/* ── Persona Bottom Sheet (mobile) ── */
+#persona-sheet {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+}
+#persona-sheet.open { display: block; }
+
+#sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,23,42,0.35);
+}
+#sheet-panel {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  border-top: 1px solid #e8ecf4;
+  padding-bottom: 24px;
+  transform: translateY(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+#persona-sheet.open #sheet-panel {
+  transform: translateY(0);
+}
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  margin: 10px auto 14px;
+}
+.sheet-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  padding: 0 20px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.sheet-persona-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 20px;
+  cursor: pointer;
+  transition: background .12s;
+}
+.sheet-persona-item:hover { background: #f8faff; }
+.sheet-persona-item.active { background: #eef2ff; }
+.sheet-persona-avatar {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sheet-persona-info { flex: 1; }
+.sheet-persona-name { font-size: 15px; font-weight: 600; color: #0f172a; }
+.sheet-persona-tag { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+.sheet-online-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+.sheet-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+  padding: 12px 0 0;
+}
+
+/* Make avatar button look interactive on mobile */
+#avatar-btn {
+  transition: transform .15s;
+}
+#avatar-btn:active { transform: scale(.93); }
+
+@media(min-width:641px) {
+  #persona-sheet { display: none !important; }
+}

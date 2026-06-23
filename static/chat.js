@@ -244,6 +244,45 @@ renderMessages();
 updateSendBtn();
 input.focus();
 
+/* ─── PERSONA SHEET (mobile) ─── */
+function buildPersonaSheet(){
+  const sheet = document.getElementById('persona-sheet');
+  const panel = document.getElementById('sheet-panel');
+
+  panel.innerHTML = `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Choose your AI</div>
+    ${PERSONAS.map(p => `
+      <div class="sheet-persona-item ${p.id===activeId?'active':''}"
+           data-id="${p.id}"
+           onclick="sheetSelect('${p.id}')">
+        <div class="sheet-persona-avatar">${avatarHTML(p,46)}</div>
+        <div class="sheet-persona-info">
+          <div class="sheet-persona-name">${p.name}</div>
+          <div class="sheet-persona-tag">${p.tag}</div>
+        </div>
+        <div class="sheet-online-dot"></div>
+      </div>
+    `).join('')}
+    <div class="sheet-hint">Tap to switch · tap outside to close</div>
+  `;
+}
+
+function togglePersonaSheet(){
+  const sheet = document.getElementById('persona-sheet');
+  sheet.classList.toggle('open');
+  buildPersonaSheet();
+}
+
+function closePersonaSheet(){
+  document.getElementById('persona-sheet').classList.remove('open');
+}
+
+function sheetSelect(id){
+  closePersonaSheet();
+  switchPersona(id);
+}
+
 /* ─── DARK MODE ─── */
 function toggleTheme(){
   document.body.classList.toggle('dark');
