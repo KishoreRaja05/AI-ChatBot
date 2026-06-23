@@ -1,4 +1,6 @@
-/* ─── PERSONA DATA ─── */
+/* ══════════════════════════════════════
+   PERSONA DATA
+══════════════════════════════════════ */
 const PERSONAS = [
   {
     id:'varahi', name:'Varahi', tag:'Friendly & Warm',
@@ -13,7 +15,7 @@ const PERSONAS = [
   {
     id:'aruvi', name:'Aruvi', tag:'Calm & Flowing',
     color:'#60a5fa', accent:'#2563eb', gender:'girl',
-    system:'You are Aruvi, a calm and thoughtful AI. Think step by step, consider multiple angles, and give well-reasoned, measured responses.'
+    system:'You are Aruvi, a calm and thoughtful AI. Think step by step, consider multiple angles, and give well-reasoned responses.'
   },
   {
     id:'agni', name:'Agni', tag:'Bold & Fierce',
@@ -22,12 +24,18 @@ const PERSONAS = [
   }
 ];
 
-/* ─── STATE ─── */
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
 let activeId = 'varahi';
 const conversations = { varahi:[], vega:[], aruvi:[], agni:[] };
 let isLoading = false;
 
-/* ─── SVG AVATARS ─── */
+
+/* ══════════════════════════════════════
+   SVG AVATARS
+══════════════════════════════════════ */
 function girlSVG(color, size=50){
   return `<svg width="${size}" height="${size}" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="25" cy="25" r="25" fill="${color}" opacity=".18"/>
@@ -53,7 +61,10 @@ function avatarHTML(persona, size=50){
   return persona.gender === 'girl' ? girlSVG(persona.color, size) : boySVG(persona.color, size);
 }
 
-/* ─── BUILD SIDEBAR ─── */
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
 function buildSidebar(){
   const list = document.getElementById('persona-list');
   list.innerHTML = PERSONAS.map(p => `
@@ -68,7 +79,20 @@ function buildSidebar(){
   `).join('');
 }
 
-/* ─── UPDATE HEADER ─── */
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-backdrop').classList.add('open');
+}
+
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('open');
+}
+
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
 function updateHeader(){
   const p = PERSONAS.find(x => x.id === activeId);
   document.getElementById('header-avatar').innerHTML = avatarHTML(p, 46);
@@ -77,7 +101,10 @@ function updateHeader(){
   document.getElementById('msg-input').placeholder = `Message ${p.name}...`;
 }
 
-/* ─── RENDER MESSAGES ─── */
+
+/* ══════════════════════════════════════
+   MESSAGES
+══════════════════════════════════════ */
 function renderMessages(){
   const p = PERSONAS.find(x => x.id === activeId);
   const msgs = conversations[activeId];
@@ -154,7 +181,10 @@ function escHtml(str){
     .replace(/\n/g,'<br>');
 }
 
-/* ─── SWITCH PERSONA ─── */
+
+/* ══════════════════════════════════════
+   SWITCH PERSONA
+══════════════════════════════════════ */
 function switchPersona(id){
   activeId = id;
   document.querySelectorAll('.persona-item').forEach(el => {
@@ -163,11 +193,14 @@ function switchPersona(id){
   updateHeader();
   renderMessages();
   updateSendBtn();
-  document.getElementById('sidebar').classList.remove('open');
+  closeSidebar();
   document.getElementById('msg-input').focus();
 }
 
-/* ─── SEND BUTTON STATE ─── */
+
+/* ══════════════════════════════════════
+   SEND BUTTON
+══════════════════════════════════════ */
 function updateSendBtn(){
   const p = PERSONAS.find(x => x.id === activeId);
   const btn = document.getElementById('send-btn');
@@ -177,7 +210,10 @@ function updateSendBtn(){
   btn.style.background = active ? p.accent : '#e2e8f0';
 }
 
-/* ─── SEND MESSAGE ─── */
+
+/* ══════════════════════════════════════
+   SEND MESSAGE
+══════════════════════════════════════ */
 async function sendMessage(){
   const input = document.getElementById('msg-input');
   const text = input.value.trim();
@@ -193,7 +229,6 @@ async function sendMessage(){
 
   try {
     const history = conversations[activeId].map(m => ({role:m.role, content:m.content}));
-
     const res = await fetch('/chat', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -201,7 +236,6 @@ async function sendMessage(){
     });
     const data = await res.json();
     const reply = data.reply || 'Something went wrong. Please try again!';
-
     conversations[activeId].push({ role:'assistant', content:reply, ts:Date.now() });
 
   } catch(e) {
@@ -219,7 +253,10 @@ async function sendMessage(){
   input.focus();
 }
 
-/* ─── INPUT EVENTS ─── */
+
+/* ══════════════════════════════════════
+   INPUT EVENTS
+══════════════════════════════════════ */
 const input = document.getElementById('msg-input');
 
 input.addEventListener('input', function(){
@@ -237,18 +274,12 @@ input.addEventListener('keydown', function(e){
 
 document.getElementById('send-btn').addEventListener('click', sendMessage);
 
-/* ─── INIT ─── */
-buildSidebar();
-updateHeader();
-renderMessages();
-updateSendBtn();
-input.focus();
 
-/* ─── PERSONA SHEET (mobile) ─── */
+/* ══════════════════════════════════════
+   MOBILE PERSONA BOTTOM SHEET
+══════════════════════════════════════ */
 function buildPersonaSheet(){
-  const sheet = document.getElementById('persona-sheet');
   const panel = document.getElementById('sheet-panel');
-
   panel.innerHTML = `
     <div class="sheet-handle"></div>
     <div class="sheet-title">Choose your AI</div>
@@ -270,8 +301,13 @@ function buildPersonaSheet(){
 
 function togglePersonaSheet(){
   const sheet = document.getElementById('persona-sheet');
-  sheet.classList.toggle('open');
-  buildPersonaSheet();
+  const isOpen = sheet.classList.contains('open');
+  if(isOpen){
+    sheet.classList.remove('open');
+  } else {
+    buildPersonaSheet();
+    sheet.classList.add('open');
+  }
 }
 
 function closePersonaSheet(){
@@ -283,33 +319,52 @@ function sheetSelect(id){
   switchPersona(id);
 }
 
-/* ─── DARK MODE ─── */
+
+/* ══════════════════════════════════════
+   DARK MODE
+══════════════════════════════════════ */
 function toggleTheme(){
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+
+  const icon = isDark ? '☀️' : '🌙';
+  document.getElementById('theme-btn').textContent = icon;
   const mobileBtn = document.getElementById('theme-btn-mobile');
-  if(mobileBtn) mobileBtn.textContent = isDark ? '☀️' : '🌙';
+  if(mobileBtn) mobileBtn.textContent = icon;
 }
 
 // Apply saved theme on load
-if(localStorage.getItem('theme') === 'dark'){
-  document.body.classList.add('dark');
-  document.getElementById('theme-btn').textContent = '☀️';
-  const mobileBtn = document.getElementById('theme-btn-mobile');
-  if(mobileBtn) mobileBtn.textContent = '☀️';
-}
-
-/* ─── SPLASH SCREEN DISMISS ─── */
-function dismissLoader() {
-  const loader = document.getElementById('loader');
-  if (loader) {
-    loader.style.opacity = '0';
-    loader.style.transition = 'opacity 0.5s ease';
-    setTimeout(() => loader.remove(), 500);
+(function applyTheme(){
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark'){
+    document.body.classList.add('dark');
+    document.getElementById('theme-btn').textContent = '☀️';
+    const mobileBtn = document.getElementById('theme-btn-mobile');
+    if(mobileBtn) mobileBtn.textContent = '☀️';
   }
+})();
+
+
+/* ══════════════════════════════════════
+   SPLASH SCREEN
+══════════════════════════════════════ */
+function dismissLoader(){
+  const loader = document.getElementById('loader');
+  if(!loader) return;
+  loader.style.opacity = '0';
+  loader.style.transition = 'opacity 0.5s ease';
+  setTimeout(() => loader.remove(), 500);
 }
 
-// Hide splash after short delay (server already awake since page loaded)
 setTimeout(dismissLoader, 1500);
+
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+buildSidebar();
+updateHeader();
+renderMessages();
+updateSendBtn();
+input.focus();
