@@ -24,6 +24,96 @@ const PERSONAS = [
   }
 ];
 
+/* ─── VOICE STATE ─── */
+let voiceEnabled = false;
+let recognizing = false;
+let personaVoices = {};
+
+const synth = window.speechSynthesis;
+const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+if (SpeechRecognitionAPI) {
+  recognition = new SpeechRecognitionAPI();
+  recognition.lang = 'en-US';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+}
+
+/* Assign a distinct-ish voice + pitch/rate to each persona */
+function assignPersonaVoices(){
+  if(!synth) return;
+  const voices = synth.getVoices().filter(v => v.lang.startsWith('en'));
+  if(voices.length === 0) return;
+
+  const femaleVoices = voices.filter(v => /female|zira|samantha|victoria|susan|karen|jenny/i.test(v.name));
+  const maleVoices = voices.filter(v => /male|david|daniel|fred|alex|guy/i.test(v.name));
+
+  const girlPool = femaleVoices.length ? femaleVoices : voices;
+  const boyPool = maleVoices.length ? maleVoices : voices;
+
+  personaVoices = {
+    varahi: { voice: girlPool[0 % girlPool.length], pitch: 1.15, rate: 0.95 },
+    vega:   { voice: girlPool[1 % girlPool.length], pitch: 1.0,  rate: 1.15 },
+    aruvi:  { voice: girlPool[2 % girlPool.length], pitch: 0.9,  rate: 0.85 },
+    agni:   { voice: boyPool[boyPool.length - 1],   pitch: 0.8,  rate: 1.1  },
+  };
+}
+
+if (synth) {
+  assignPersonaVoices();
+  synth.onvoiceschanged = assignPersonaVoices;
+}
+
+function speakText(text, personaId){
+  if(!synth || !voiceEnabled) return;
+  synth.cancel(); // stop anything currently speaking
+  const utter = new SpeechSynthesisUtterance(text);
+  const conf = personaVoices[personaId];
+  if(conf && conf.voice) utter.voice = conf.voice;
+  utter.pitch = conf ? conf.pitch : 1;
+  utter.rate = conf ? conf.rate : 1;
+  synth.speak(utter);
+}
+
+function toggleVoiceOutput(){
+  voiceEnabled = !voiceEnabled;
+  document.getElementById('voice-toggle-btn').classList.toggle('active', voiceEnabled);
+  if(!voiceEnabled && synth) synth.cancel();
+}
+
+function toggleMic(){
+  if(!recognition){
+    alert('Voice input is not supported in this browser. Try Chrome or Edge.');
+    return;
+  }
+  if(recognizing){
+    recognition.stop();
+    return;
+  }
+  recognition.start();
+}
+
+if(recognition){
+  recognition.onstart = () => {
+    recognizing = true;
+    document.getElementById('mic-btn').classList.add('recording');
+  };
+  recognition.onend = () => {
+    recognizing = false;
+    document.getElementById('mic-btn').classList.remove('recording');
+  };
+  recognition.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    const inputEl = document.getElementById('msg-input');
+    inputEl.value = transcript;
+    inputEl.dispatchEvent(new Event('input'));
+  };
+  recognition.onerror = () => {
+    recognizing = false;
+    document.getElementById('mic-btn').classList.remove('recording');
+  };
+}
+
 
 /* ══════════════════════════════════════
    STATE
@@ -237,6 +327,7 @@ async function sendMessage(){
     const data = await res.json();
     const reply = data.reply || 'Something went wrong. Please try again!';
     conversations[activeId].push({ role:'assistant', content:reply, ts:Date.now() });
+    speakText(reply, activeId);
 
   } catch(e) {
     conversations[activeId].push({
@@ -368,3 +459,5 @@ updateHeader();
 renderMessages();
 updateSendBtn();
 input.focus();
+document.getElementById('voice-toggle-btn').addEventListener('click', toggleVoiceOutput);
+document.getElementById('mic-btn').addEventListener('click', toggleMic);
