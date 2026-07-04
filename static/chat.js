@@ -42,21 +42,19 @@ if (SpeechRecognitionAPI) {
 /* Assign a distinct-ish voice + pitch/rate to each persona */
 function assignPersonaVoices(){
   if(!synth) return;
-  const voices = synth.getVoices().filter(v => v.lang.startsWith('en'));
+  const voices = synth.getVoices();
   if(voices.length === 0) return;
 
-  const femaleVoices = voices.filter(v => /female|zira|samantha|victoria|susan|karen|jenny/i.test(v.name));
-  const maleVoices = voices.filter(v => /male|david|daniel|fred|alex|guy/i.test(v.name));
-
-  const girlPool = femaleVoices.length ? femaleVoices : voices;
-  const boyPool = maleVoices.length ? maleVoices : voices;
+  const findVoice = (namePart) => voices.find(v => v.name.includes(namePart));
 
   personaVoices = {
-    varahi: { voice: girlPool[0 % girlPool.length], pitch: 1.15, rate: 0.95 },
-    vega:   { voice: girlPool[1 % girlPool.length], pitch: 1.0,  rate: 1.15 },
-    aruvi:  { voice: girlPool[2 % girlPool.length], pitch: 0.9,  rate: 0.85 },
-    agni:   { voice: boyPool[boyPool.length - 1],   pitch: 0.8,  rate: 1.1  },
+    varahi: { voice: findVoice('Zira')   || findVoice('Aria')    || voices[0], pitch: 1.15, rate: 0.95 },
+    vega:   { voice: findVoice('Libby')  || findVoice('Heather') || voices[0], pitch: 1.0,  rate: 1.1  },
+    aruvi:  { voice: findVoice('Heera')  || findVoice('Priya')   || voices[0], pitch: 0.95, rate: 0.85 },
+    agni:   { voice: findVoice('Guy')    || findVoice('David')   || voices[0], pitch: 0.85, rate: 1.05 },
   };
+
+  console.log('Persona voices assigned:', personaVoices);
 }
 
 if (synth) {
