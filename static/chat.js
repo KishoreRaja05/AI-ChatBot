@@ -65,14 +65,26 @@ if (synth) {
 }
 
 function speakText(text, personaId){
+  console.log('speakText called → voiceEnabled:', voiceEnabled, '| personaId:', personaId);
   if(!synth || !voiceEnabled) return;
-  synth.cancel(); // stop anything currently speaking
-  const utter = new SpeechSynthesisUtterance(text);
-  const conf = personaVoices[personaId];
-  if(conf && conf.voice) utter.voice = conf.voice;
-  utter.pitch = conf ? conf.pitch : 1;
-  utter.rate = conf ? conf.rate : 1;
-  synth.speak(utter);
+
+  synth.cancel();
+
+  setTimeout(() => {
+    const utter = new SpeechSynthesisUtterance(text);
+    const conf = personaVoices[personaId];
+    console.log('Using voice config:', conf);
+
+    if(conf && conf.voice) utter.voice = conf.voice;
+    utter.pitch = conf ? conf.pitch : 1;
+    utter.rate = conf ? conf.rate : 1;
+
+    utter.onstart = () => console.log('Speech started');
+    utter.onerror = (e) => console.error('Speech ERROR:', e.error);
+    utter.onend = () => console.log('Speech ended');
+
+    synth.speak(utter);
+  }, 150);
 }
 
 function toggleVoiceOutput(){
